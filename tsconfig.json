@@ -1,0 +1,4 @@
+{
+  "compilerOptions": {"noUnusedLocals": true, "noUnusedParameters": true},
+  "extends": "@tsconfig/react-native/tsconfig.json"
+}
