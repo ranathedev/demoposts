@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     elevation: 5,
+    marginBottom: 15,
   },
   title: {
     paddingVertical: 8,
