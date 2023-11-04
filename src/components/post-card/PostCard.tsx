@@ -18,15 +18,16 @@ interface Props {
   };
   isDarkMode: boolean;
   onPress: (arg: any) => void;
+  index: number;
 }
 
-const PostCard = ({post, isDarkMode, onPress}: Props) => {
+const PostCard = ({post, isDarkMode, onPress, index}: Props) => {
   const capitalizeFirstLetter = (str: string) => {
     return str?.charAt(0).toUpperCase() + str?.slice(1);
   };
 
   return (
-    <TouchableNativeFeedback onPress={() => onPress(post)}>
+    <TouchableNativeFeedback onPress={() => onPress(index)}>
       <View
         style={[
           styles.container,
