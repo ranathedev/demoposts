@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {
+  Animated,
+  Dimensions,
   Image,
+  PanResponder,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -22,6 +25,51 @@ interface Props {
 }
 
 const PostDetails = ({post, onBackPress, isDarkMode}: Props) => {
+  const [imgIndex, setImgIndex] = useState(0);
+
+  const imgPos = useRef(new Animated.Value(0)).current;
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderMove: (evt, gestureState) => {
+      imgPos.setValue(gestureState.dx);
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      const width = Dimensions.get('window').width;
+      if (Math.abs(gestureState.dx) > width * 0.4) {
+        const direction = Math.sign(gestureState.dx);
+        Animated.timing(imgPos, {
+          toValue: direction * width,
+          duration: 250,
+          useNativeDriver: false,
+        }).start(() => handelSwipe(-1 * direction, width));
+      } else {
+        Animated.spring(imgPos, {
+          toValue: 0,
+          useNativeDriver: false,
+        }).start();
+      }
+    },
+  });
+
+  const handelSwipe = (indexIndirection: number, width: number) => {
+    if (!post.images[imgIndex + indexIndirection]) {
+      Animated.timing(imgPos, {
+        toValue: 0,
+        useNativeDriver: false,
+      }).start();
+      return;
+    }
+    setImgIndex(imgIndex + indexIndirection);
+    imgPos.setValue(indexIndirection * width);
+    setTimeout(() => {
+      Animated.spring(imgPos, {
+        toValue: 0,
+        useNativeDriver: false,
+      }).start();
+    });
+  };
+
   const capitalizeFirstLetter = (str: string) => {
     return str?.charAt(0).toUpperCase() + str?.slice(1);
   };
@@ -38,7 +86,11 @@ const PostDetails = ({post, onBackPress, isDarkMode}: Props) => {
         </Text>
       </Pressable>
       <View style={{flex: 1}}>
-        <Image style={styles.img} source={{uri: post.images[0]}} />
+        <Animated.Image
+          {...panResponder.panHandlers}
+          style={[styles.img, {transform: [{translateX: imgPos}]}]}
+          source={{uri: post.images[imgIndex]}}
+        />
         <View style={styles.infoContainer}>
           <View style={styles.authorContainer}>
             <Image style={styles.avatar} source={{uri: post.avatar}} />
@@ -47,18 +99,10 @@ const PostDetails = ({post, onBackPress, isDarkMode}: Props) => {
               {post.author}
             </Text>
           </View>
-          <View style={styles.dateContainer}>
-            <Text
-              style={[
-                styles.dateLabel,
-                {color: isDarkMode ? '#fff' : '#374151'},
-              ]}>
-              Date Published:
-            </Text>
-            <Text style={{color: isDarkMode ? '#fff' : '#374151'}}>
-              {post.publish_date}
-            </Text>
-          </View>
+
+          <Text style={{color: isDarkMode ? '#fff' : '#374151'}}>
+            {post.publish_date}
+          </Text>
         </View>
         <Text style={[styles.title, {color: isDarkMode ? '#fff' : '#000'}]}>
           {capitalizeFirstLetter(post.title)}
@@ -99,13 +143,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ddd',
     marginHorizontal: 10,
-    marginTop: 10,
-    paddingVertical: 5,
+    marginTop: 5,
+    paddingVertical: 10,
     paddingHorizontal: 10,
   },
   authorContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 10,
   },
   avatar: {
     width: 50,
@@ -115,13 +160,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   author: {
-    fontWeight: '500',
-  },
-  dateContainer: {
-    gap: 5,
-    alignItems: 'flex-end',
-  },
-  dateLabel: {
     fontWeight: '500',
   },
   title: {

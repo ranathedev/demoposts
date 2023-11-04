@@ -1,10 +1,10 @@
 import React from 'react';
 import {
+  Image,
   StyleSheet,
   Text,
-  View,
-  Image,
   TouchableNativeFeedback,
+  View,
 } from 'react-native';
 
 interface Props {
