@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableNativeFeedback,
+} from 'react-native';
 
 interface Props {
   post: {
@@ -10,25 +16,28 @@ interface Props {
     publish_date: string;
     images: Array<string>;
   };
-  isDarKMode: boolean;
+  isDarkMode: boolean;
+  onPress: (arg: any) => void;
 }
 
-const PostCard = ({post, isDarKMode}: Props) => {
+const PostCard = ({post, isDarkMode, onPress}: Props) => {
   const capitalizeFirstLetter = (str: string) => {
     return str?.charAt(0).toUpperCase() + str?.slice(1);
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        {backgroundColor: isDarKMode ? '#1f2937' : '#f3f4f6'},
-      ]}>
-      <Image style={styles.img} source={{uri: post?.images[0]}} />
-      <Text style={[styles.title, {color: isDarKMode ? '#fff' : '#374151'}]}>
-        {capitalizeFirstLetter(post?.title)}
-      </Text>
-    </View>
+    <TouchableNativeFeedback onPress={() => onPress(post)}>
+      <View
+        style={[
+          styles.container,
+          {backgroundColor: isDarkMode ? '#1f2937' : '#f3f4f6'},
+        ]}>
+        <Image style={styles.img} source={{uri: post?.images[0]}} />
+        <Text style={[styles.title, {color: isDarkMode ? '#fff' : '#374151'}]}>
+          {capitalizeFirstLetter(post?.title)}
+        </Text>
+      </View>
+    </TouchableNativeFeedback>
   );
 };
 
@@ -45,7 +54,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     fontSize: 25,
   },
-  img: {width: 'auto', height: 200},
+  img: {height: 200},
 });
 
 export default PostCard;

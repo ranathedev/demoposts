@@ -5,15 +5,23 @@ interface Props {
   searchTerm: string;
   setSearchTerm: (arg: string) => void;
   onSubmit: () => void;
+  isDarkMode: boolean;
 }
 
-const SearchBar = ({searchTerm, setSearchTerm, onSubmit}: Props) => {
+const SearchBar = ({
+  searchTerm,
+  setSearchTerm,
+  onSubmit,
+  isDarkMode,
+}: Props) => {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, {color: isDarkMode ? '#fff' : '#a8a8a8'}]}
         placeholder="Search"
+        placeholderTextColor="#a8a8a8"
         returnKeyType="search"
+        caretHidden={true}
         value={searchTerm}
         onSubmitEditing={onSubmit}
         onChangeText={val => setSearchTerm(val)}

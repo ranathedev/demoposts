@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
+  Modal,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -10,9 +11,18 @@ import {
 import Posts from './src/data/mock_data.json';
 import PostCard from './src/components/post-card';
 import SearchBar from './src/components/search-bar';
+import PostDetails from './src/components/post-details';
 
 function App(): JSX.Element {
   const [data, setData] = useState(Posts);
+  const [postDetails, setPostDetails] = useState<{
+    author: string;
+    avatar: string;
+    title: string;
+    content: string;
+    publish_date: string;
+    images: Array<string>;
+  } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -29,6 +39,49 @@ function App(): JSX.Element {
     setData(filteredArray);
   };
 
+  const backToPosts = () => {
+    setPostDetails(null);
+  };
+
+  const getView = () => {
+    if (postDetails) {
+      return (
+        <Modal
+          style={{borderWidth: 1, borderColor: 'red'}}
+          visible={postDetails ? true : false}
+          animationType="slide">
+          <PostDetails
+            isDarkMode={isDarkMode}
+            post={postDetails}
+            onBackPress={backToPosts}
+          />
+        </Modal>
+      );
+    }
+
+    return (
+      <>
+        <SearchBar
+          searchTerm={searchTerm}
+          isDarkMode={isDarkMode}
+          setSearchTerm={setSearchTerm}
+          onSubmit={filterArray}
+        />
+        <FlatList
+          style={styles.list}
+          data={data}
+          renderItem={post => (
+            <PostCard
+              post={post.item}
+              isDarkMode={isDarkMode}
+              onPress={setPostDetails}
+            />
+          )}
+        />
+      </>
+    );
+  };
+
   return (
     <SafeAreaView
       style={[
@@ -39,18 +92,7 @@ function App(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={isDarkMode ? '#28231d' : '#fff'}
       />
-      <SearchBar
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        onSubmit={filterArray}
-      />
-      <FlatList
-        style={styles.list}
-        data={data}
-        renderItem={post => (
-          <PostCard post={post.item} isDarKMode={isDarkMode} />
-        )}
-      />
+      {getView()}
     </SafeAreaView>
   );
 }
