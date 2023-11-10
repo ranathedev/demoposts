@@ -15,14 +15,7 @@ import PostDetails from './src/components/post-details';
 
 function App(): JSX.Element {
   const [data, setData] = useState(Posts);
-  const [postDetails, setPostDetails] = useState<{
-    author: string;
-    avatar: string;
-    title: string;
-    content: string;
-    publish_date: string;
-    images: Array<string>;
-  } | null>(null);
+  const [postIndex, setPostIndex] = useState(-1);
   const [searchTerm, setSearchTerm] = useState('');
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -40,20 +33,26 @@ function App(): JSX.Element {
   };
 
   const backToPosts = () => {
-    setPostDetails(null);
+    setPostIndex(-1);
   };
 
   const getView = () => {
-    if (postDetails) {
+    if (postIndex >= 0) {
       return (
         <Modal
-          style={{borderWidth: 1, borderColor: 'red'}}
-          visible={postDetails ? true : false}
+          style={{
+            borderWidth: 1,
+            borderColor: 'red',
+            backgroundColor: isDarkMode ? '#28231d' : '#fff',
+          }}
+          visible={postIndex >= 0 ? true : false}
           animationType="slide">
           <PostDetails
             isDarkMode={isDarkMode}
-            post={postDetails}
+            posts={data}
             onBackPress={backToPosts}
+            postIndex={postIndex}
+            setPostIndex={setPostIndex}
           />
         </Modal>
       );
@@ -73,8 +72,9 @@ function App(): JSX.Element {
           renderItem={post => (
             <PostCard
               post={post.item}
+              index={post.index}
               isDarkMode={isDarkMode}
-              onPress={setPostDetails}
+              onPress={setPostIndex}
             />
           )}
         />
@@ -86,7 +86,7 @@ function App(): JSX.Element {
     <SafeAreaView
       style={[
         styles.container,
-        {backgroundColor: isDarkMode ? '#1a1a1a' : '#fff'},
+        {backgroundColor: isDarkMode ? '#28231d' : '#fff'},
       ]}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
