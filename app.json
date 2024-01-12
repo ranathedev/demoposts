@@ -1,4 +1,6 @@
 {
   "name": "DemoPosts",
-  "displayName": "DemoPosts"
+  "displayName": "DemoPosts",
+  "version": "1.0.0",
+  "owner": "ranathedev"
 }
