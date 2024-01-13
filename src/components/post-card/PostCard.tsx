@@ -22,9 +22,8 @@ interface Props {
 }
 
 const PostCard = ({post, isDarkMode, onPress, index}: Props) => {
-  const capitalizeFirstLetter = (str: string) => {
-    return str?.charAt(0).toUpperCase() + str?.slice(1);
-  };
+  const capitalizeFirstLetter = (str: string) =>
+    str?.charAt(0).toUpperCase() + str?.slice(1);
 
   return (
     <TouchableNativeFeedback onPress={() => onPress(index)}>
@@ -33,7 +32,7 @@ const PostCard = ({post, isDarkMode, onPress, index}: Props) => {
           styles.container,
           {backgroundColor: isDarkMode ? '#1f2937' : '#f3f4f6'},
         ]}>
-        <Image style={styles.img} source={{uri: post?.images[0]}} />
+        <Image style={styles.img} source={{uri: post.images[0]}} />
         <Text style={[styles.title, {color: isDarkMode ? '#fff' : '#374151'}]}>
           {capitalizeFirstLetter(post?.title)}
         </Text>

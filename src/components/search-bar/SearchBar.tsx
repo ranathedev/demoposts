@@ -13,22 +13,20 @@ const SearchBar = ({
   setSearchTerm,
   onSubmit,
   isDarkMode,
-}: Props) => {
-  return (
-    <View style={styles.container}>
-      <TextInput
-        style={[styles.input, {color: isDarkMode ? '#fff' : '#a8a8a8'}]}
-        placeholder="Search"
-        placeholderTextColor="#a8a8a8"
-        returnKeyType="search"
-        caretHidden={true}
-        value={searchTerm}
-        onSubmitEditing={onSubmit}
-        onChangeText={val => setSearchTerm(val)}
-      />
-    </View>
-  );
-};
+}: Props) => (
+  <View style={styles.container}>
+    <TextInput
+      style={[styles.input, {color: isDarkMode ? '#fff' : '#a8a8a8'}]}
+      placeholder="Search"
+      placeholderTextColor="#a8a8a8"
+      returnKeyType="search"
+      caretHidden={true}
+      value={searchTerm}
+      onSubmitEditing={onSubmit}
+      onChangeText={val => setSearchTerm(val)}
+    />
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {

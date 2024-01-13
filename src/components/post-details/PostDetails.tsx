@@ -40,9 +40,9 @@ const PostDetails = ({
 
   const imgPanResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: (evt, gestureState) => {
-      imgPos.setValue(gestureState.dx);
-    },
+    // @ts-ignore
+    onPanResponderMove: (evt, gestureState) => imgPos.setValue(gestureState.dx),
+    // @ts-ignore
     onPanResponderRelease: (evt, gestureState) => {
       const width = Dimensions.get('window').width;
       if (Math.abs(gestureState.dx) > width * 0.4) {
@@ -52,20 +52,20 @@ const PostDetails = ({
           duration: 250,
           useNativeDriver: false,
         }).start(() => handelImageSwipe(-1 * direction, width));
-      } else {
+      } else
         Animated.spring(imgPos, {
           toValue: 0,
           useNativeDriver: false,
         }).start();
-      }
     },
   });
 
   const postPanResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: (evt, gestureState) => {
-      postPos.setValue(gestureState.dx);
-    },
+    // @ts-ignore
+    onPanResponderMove: (evt, gestureState) =>
+      postPos.setValue(gestureState.dx),
+    // @ts-ignore
     onPanResponderRelease: (evt, gestureState) => {
       const width = Dimensions.get('window').width;
       if (Math.abs(gestureState.dx) > width * 0.5) {
@@ -75,12 +75,11 @@ const PostDetails = ({
           duration: 250,
           useNativeDriver: false,
         }).start(() => handelPostSwipe(-1 * direction, width));
-      } else {
+      } else
         Animated.spring(postPos, {
           toValue: 0,
           useNativeDriver: false,
         }).start();
-      }
     },
   });
 
@@ -94,12 +93,10 @@ const PostDetails = ({
     }
     setImgIndex(imgIndex + indexIndirection);
     imgPos.setValue(indexIndirection * width);
-    setTimeout(() => {
-      Animated.spring(imgPos, {
-        toValue: 0,
-        useNativeDriver: false,
-      }).start();
-    });
+    Animated.spring(imgPos, {
+      toValue: 0,
+      useNativeDriver: false,
+    }).start();
   };
 
   const handelPostSwipe = (indexIndirection: number, width: number) => {
@@ -112,17 +109,14 @@ const PostDetails = ({
     }
     setPostIndex(postIndex + indexIndirection);
     postPos.setValue(indexIndirection * width);
-    setTimeout(() => {
-      Animated.spring(postPos, {
-        toValue: 0,
-        useNativeDriver: false,
-      }).start();
-    });
+    Animated.spring(postPos, {
+      toValue: 0,
+      useNativeDriver: false,
+    }).start();
   };
 
-  const capitalizeFirstLetter = (str: string) => {
-    return str?.charAt(0).toUpperCase() + str?.slice(1);
-  };
+  const capitalizeFirstLetter = (str: string) =>
+    str?.charAt(0).toUpperCase() + str?.slice(1);
 
   return (
     <Animated.View
